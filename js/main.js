@@ -22,19 +22,25 @@ function layThongTinNV() {
   var gioLam = getEle("gioLam").value;
 
   var isValid = true;
-
+  //Kiem tra tai khoan
   isValid &=
-    validation.kiemTraRong(taiKhoan, "tbTKNV", "(*) Vui long nhap tai khoan") &&
+    validation.kiemTraRong(taiKhoan, "tbTKNV", "(*) Vui lòng nhập tài khoản") &&
     validation.kiemTraDoDaiKiTu(
       taiKhoan,
       "tbTKNV",
       "(*) Vui long nhap ki tu 4 - 6",
       4,
       6
+    ) &&
+    validation.kiemTraTaiKhoanTonTai(
+      taiKhoan,
+      "tbTKNV",
+      "(*) Vui lòng nhập tài khoản khác",
+      dsnv.arr
     );
   //Validation tên nhân viên
   isValid &=
-    validation.kiemTraRong(hoTen, "tbTen", "(*) Vui long nhap ten") &&
+    validation.kiemTraRong(hoTen, "tbTen", "(*) Vui lòng nhập tên") &&
     validation.checkPattern(
       hoTen,
       "tbTen",
@@ -68,7 +74,7 @@ function layThongTinNV() {
     validation.kiemTraDoDaiKiTu(
       matKhau,
       "tbMatKhau",
-      "(*) Vui long nhap nhập mật khẩu 6 - 10 ký tự",
+      "(*) Vui lòng nhập mật khẩu 6 - 10 ký tự",
       6,
       10
     );
@@ -79,15 +85,39 @@ function layThongTinNV() {
     "(*) Vui long nhap ngay lam"
   );
   //Validation luong Co ban
-  isValid &= validation.kiemTraRong(luongCoBan,"tbLuongCB","(*) Vui lòng nhập lương") && validation.kiemTraGiaTri(luongCoBan,"tbLuongCB","Nhập lương trong vùng từ n 1.000.000 - 20.000.000",1000000,20000000);
+  isValid &=
+    validation.kiemTraRong(
+      luongCoBan,
+      "tbLuongCB",
+      "(*) Vui lòng nhập lương"
+    ) &&
+    validation.kiemTraGiaTri(
+      luongCoBan,
+      "tbLuongCB",
+      "Nhập lương trong vùng từ n 1.000.000 - 20.000.000",
+      1000000,
+      20000000
+    );
   //Validation Chức vụ
   isValid &= validation.kiemTraChucVu(
     "chucvu",
     "tbChucVu",
-    "(*) Vui long chon chuc vu"
+    "(*) Vui lòng chọn chức vụ"
   );
   //Validation gio lam
-  isValid &= validation.kiemTraRong(gioLam,"tbGiolam","(*) Vui lòng nhập số giờ làm") && validation.kiemTraGiaTri(gioLam,"tbGiolam","(*) Vui lòng nhập thời gian làm từ 80-200 giờ",80,200);
+  isValid &=
+    validation.kiemTraRong(
+      gioLam,
+      "tbGiolam",
+      "(*) Vui lòng nhập số giờ làm"
+    ) &&
+    validation.kiemTraGiaTri(
+      gioLam,
+      "tbGiolam",
+      "(*) Vui lòng nhập thời gian làm từ 80-200 giờ",
+      80,
+      200
+    );
   //Tạo đối tượng sv từ lớp đối tượng SinhVien
   if (isValid) {
     var nv = new NhanVien(
@@ -148,8 +178,8 @@ function suaNV(taiKhoan) {
     getEle("gioLam").value = nv.gioLam;
     //Xóa span lỗi khi qua cập nhật
     var TB = document.getElementsByClassName("sp-thongbao");
-    for(var i = 0; i < TB.length; i++){
-      TB[i].innerHTML="";
+    for (var i = 0; i < TB.length; i++) {
+      TB[i].innerHTML = "";
     }
   }
   getEle("btnThemNV").disabled = true;
@@ -181,9 +211,9 @@ function themNhanVien() {
 getEle("searchName").addEventListener("keyup", searchNV);
 function searchNV() {
   var txtSearch = getEle("searchName").value;
-  var mangTimKiem = dsnv.timKiemSV(txtSearch);  
+  var mangTimKiem = dsnv.timKiemSV(txtSearch);
   renderTable(mangTimKiem);
-  if(txtSearch==0) renderTable(dsnv.arr);
+  if (txtSearch == 0) renderTable(dsnv.arr);
 }
 //Cập nhật NV
 function updateNV() {
@@ -215,12 +245,16 @@ function setLocalStorage() {
   localStorage.setItem("DSNV", dataString);
 }
 //Reset disable các nút
-getEle("btnDong").onclick = function (){
+getEle("btnDong").onclick = function () {
   getEle("tknv").disabled = false;
   getEle("btnCapNhat").disabled = false;
   getEle("btnThemNV").disabled = false;
-}
+  var TB = document.getElementsByClassName("sp-thongbao");
+  for (var i = 0; i < TB.length; i++) {
+    TB[i].innerHTML = "";
+  }
+};
 //Không cho phép người dùng cập nhật khi thêm nhân viên
-getEle("btnThem").onclick = function (){
+getEle("btnThem").onclick = function () {
   getEle("btnCapNhat").disabled = true;
-}
+};
