@@ -8,7 +8,7 @@ function getEle(id) {
   return document.getElementById(id);
 }
 
-function layThongTinNV() {
+function layThongTinNV(isAdd) {
   /**
    * Dom lay thong tin tu cac the input
    */
@@ -23,7 +23,8 @@ function layThongTinNV() {
 
   var isValid = true;
   //Kiem tra tai khoan
-  isValid &=
+  if(isAdd){
+    isValid &=
     validation.kiemTraRong(taiKhoan, "tbTKNV", "(*) Vui lòng nhập tài khoản") &&
     validation.kiemTraDoDaiKiTu(
       taiKhoan,
@@ -38,6 +39,7 @@ function layThongTinNV() {
       "(*) Vui lòng nhập tài khoản khác",
       dsnv.arr
     );
+  }
   //Validation tên nhân viên
   isValid &=
     validation.kiemTraRong(hoTen, "tbTen", "(*) Vui lòng nhập tên") &&
@@ -195,7 +197,7 @@ function xoaNV(taiKhoan) {
 //Thêm Nhân viên
 function themNhanVien() {
   //Lấy thông tin từ user
-  var nv = layThongTinNV();
+  var nv = layThongTinNV(true);
   if (nv) {
     //Thêm nv vào DSNV
     dsnv.themNV(nv);
@@ -217,7 +219,7 @@ function searchNV() {
 }
 //Cập nhật NV
 function updateNV() {
-  var nv = layThongTinNV();
+  var nv = layThongTinNV(false);
   if (nv) {
     dsnv.capNhatNV(nv);
     // getEle("inputForm").reset();
